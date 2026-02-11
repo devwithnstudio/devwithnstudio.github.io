@@ -29,12 +29,12 @@
         </div>
     </nav>
 
-    <!-- Header / Hero Section -->
+    <!-- Header / Hero Section (ปรับปรุงการขึ้นบรรทัดใหม่) -->
     <header class="hero-gradient pt-8 pb-12 px-4 border-b border-green-100">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8">
             <div class="flex-1 text-center md:text-left">
                 <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-                    เพราะทุกชีวิต <span class="text-green-600">มีความหมาย</span>
+                    เพราะทุกชีวิต <br><span class="text-green-600">มีความหมาย</span>
                 </h1>
                 <p class="text-gray-600 text-lg mb-8 leading-relaxed">
                     รวบรวมมูลนิธิและศูนย์พักพิงสัตว์จรจัดทั่วประเทศไทย <br class="hidden md:block"> เพื่อให้เพื่อนสี่ขาอิ่มท้องและมีชีวิตที่ดีขึ้น
@@ -58,11 +58,10 @@
         </div>
     </header>
 
-    <!-- Filter Bar -->
+    <!-- Filter Bar (เอาเงินบริจาคออก) -->
     <div class="bg-white sticky top-16 z-40 border-b border-gray-100 shadow-sm">
         <div id="filterContainer" class="max-w-5xl mx-auto px-4 py-4 flex gap-2 overflow-x-auto no-scrollbar">
             <button data-category="ทั้งหมด" onclick="setFilter('ทั้งหมด')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border text-sm font-medium transition-all bg-green-600 text-white border-green-600">ทั้งหมด</button>
-            <button data-category="เงิน" onclick="setFilter('เงิน')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">💰 เงินบริจาค</button>
             <button data-category="อาหาร" onclick="setFilter('อาหาร')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">🦴 อาหาร</button>
             <button data-category="ของใช้" onclick="setFilter('ของใช้')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">📦 ของใช้</button>
             <button data-category="รักษา" onclick="setFilter('รักษา')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">🏥 ค่ารักษา</button>
@@ -78,7 +77,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-8 px-6">
+    <footer class="bg-gray-900 text-white pt-16 pb-8 px-6 mt-10">
         <div class="max-w-5xl mx-auto text-center md:text-left">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                 <div>
@@ -93,20 +92,20 @@
                 <div>
                     <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs">ติดต่อเรา</h4>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        หากท่านต้องการเพิ่มข้อมูลมูลนิธิ หรือแก้ไขพิกัด <br>
-                        สามารถติดต่อได้ที่: <a href="mailto:contact@petshare.th" class="underline text-white">contact@petshare.th</a>
+                        ท่านต้องการเพิ่มมูลนิธิ หรือแก้ไขพิกัด ติดต่อ: <br>
+                        <a href="mailto:contact@petshare.th" class="underline text-white">contact@petshare.th</a>
                     </p>
                 </div>
                 <div>
                     <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs">คำชี้แจง</h4>
                     <p class="text-[10px] text-gray-500 leading-relaxed italic">
-                        ข้อมูลอาจเปลี่ยนแปลง กรุณาตรวจสอบจากช่องทางทางการ (FB/Web) ของมูลนิธินั้นๆ อีกครั้งก่อนการทำธุรกรรม เพื่อความปลอดภัยและป้องกันมิจฉาชีพ
+                        ข้อมูลอาจเปลี่ยนแปลงได้ กรุณาตรวจสอบจากช่องทางทางการอีกครั้งก่อนการบริจาค เพื่อความปลอดภัยของท่าน
                     </p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="border-t border-gray-800 pt-8 text-center md:text-left">
                 <p class="text-gray-500 text-[10px] uppercase tracking-widest">
-                    &copy; 2024 PetShare Thailand - สนับสนุนโดยอาสาสมัครเพื่อสัตว์
+                    &copy; 2024 PetShare Thailand - Built with ❤️ for animals
                 </p>
             </div>
         </div>
@@ -118,27 +117,27 @@
         <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] p-8 transform translate-y-full transition-transform duration-300 max-h-[92vh] overflow-y-auto" id="modalContentContainer">
             <div class="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-8"></div>
             <div id="modalBody" class="max-w-2xl mx-auto"></div>
-            <button onclick="closeModal()" class="w-full mt-8 py-4 bg-gray-100 rounded-2xl font-bold text-gray-500 hover:bg-gray-200 transition-all">ปิดหน้าต่างนี้</button>
+            <button onclick="closeModal()" class="w-full mt-8 py-4 bg-gray-100 rounded-2xl font-bold text-gray-500 hover:bg-gray-200 transition-all">ปิดหน้าต่าง</button>
         </div>
     </div>
 
     <script>
         const foundations = [
-            { id: 1, name: "Soi Dog Foundation", phone: "076-681-029", email: "donation@soidog.org", website: "https://www.soidog.org", facebook: "SoiDogPage", donationUrl: "https://www.soidog.org/content/make-donation", accepts: ["เงิน","อาหาร","รักษา","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["รับบริจาคทั้ง เงิน และช่วยสนับสนุนงานสัตว์ในพื้นที่ต่าง ๆ", "เป็นมูลนิธิช่วยเหลือหมาและแมวจรจัดใหญ่สุดแห่งหนึ่งในไทย มีการให้บริการรักษา ทำหมัน และให้ที่พักพิง"], province: "ภูเก็ต", lat: 8.1691, lng: 98.3472 },
-            { id: 2, name: "Baan Maa", phone: "+66 952 200 143", email: "accounts@baanmaa.org", website: "https://baanmaa.org/donate/", facebook: "", donationUrl: "https://baanmaa.org/donate/", accepts: ["เงิน","อาหาร","รักษา","วัคซีน","หาบ้าน"], description: ["รับบริจาคทั้งเงินและเข้าร่วมเป็นส่วนหนึ่งของโครงการต่าง ๆ", "ช่วยเหลือหมาจรจัดในไทย ให้การช่วยอาหาร วัคซีน การรักษา และหาที่อยู่ให้สัตว์"], province: "เชียงใหม่", lat: 18.7883, lng: 98.9853 },
-            { id: 3, name: "PAWS Bangkok", phone: "", email: "", website: "", facebook: "https://www.facebook.com/pawsbangkok/", donationUrl: "", accepts: ["อาหาร","ของใช้","สนับสนุนการดูแล"], description: ["รับบริจาคผ่านเว็บไซต์และเพจทางการ", "รับบริจาคอาหารแมว/หมา และของใช้อื่น ๆ ที่ช่วยดูแลสัตว์ รวมถึงการสนับสนุนการดูแลสัตว์"], province: "กรุงเทพฯ", lat: 13.7563, lng: 100.5018 },
-            { id: 4, name: "The Man That Rescues Dogs (TMTRD)", phone: "", email: "", website: "https://www.tmtrd.org", facebook: "The Man That Rescues Dogs", donationUrl: "https://www.tmtrd.org", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง","รักษา"], description: ["ศูนย์พักพิงสุนัขจรจัดขนาดใหญ่ดูแลระยะยาวและรักษาพยาบาล", "ช่องทางการบริจาคสามารถดูได้ในเว็บไซต์"], province: "ชลบุรี", lat: 12.9236, lng: 100.8825 },
+            { id: 1, name: "Soi Dog Foundation", phone: "076-681-029", email: "donation@soidog.org", website: "https://www.soidog.org", facebook: "SoiDogPage", donationUrl: "https://www.soidog.org/content/make-donation", accepts: ["เงิน","อาหาร","รักษา","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["รับบริจาคทั้ง เงิน และช่วยสนับสนุนงานสัตว์ในพื้นที่ต่าง ๆ", "มูลนิธิช่วยเหลือหมาแมวจรจัดใหญ่สุดแห่งหนึ่งในไทย ให้บริการรักษา ทำหมัน และที่พักพิง"], province: "ภูเก็ต", lat: 8.1691, lng: 98.3472 },
+            { id: 2, name: "Baan Maa", phone: "+66 952 200 143", email: "accounts@baanmaa.org", website: "https://baanmaa.org/donate/", facebook: "", donationUrl: "https://baanmaa.org/donate/", accepts: ["เงิน","อาหาร","รักษา","วัคซีน","หาบ้าน"], description: ["รับบริจาคทั้งเงินและเข้าร่วมโครงการต่าง ๆ", "ช่วยเหลือหมาจรจัดในไทย ให้การช่วยอาหาร วัคซีน การรักษา และหาที่อยู่ให้สัตว์"], province: "เชียงใหม่", lat: 18.7883, lng: 98.9853 },
+            { id: 3, name: "PAWS Bangkok", phone: "", email: "", website: "", facebook: "https://www.facebook.com/pawsbangkok/", donationUrl: "", accepts: ["อาหาร","ของใช้","สนับสนุนการดูแล"], description: ["รับบริจาคผ่านเพจทางการ", "รับบริจาคอาหารแมว/หมา และของใช้ที่ช่วยดูแลสัตว์"], province: "กรุงเทพฯ", lat: 13.7563, lng: 100.5018 },
+            { id: 4, name: "The Man That Rescues Dogs (TMTRD)", phone: "", email: "", website: "https://www.tmtrd.org", facebook: "The Man That Rescues Dogs", donationUrl: "https://www.tmtrd.org", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง","รักษา"], description: ["ศูนย์พักพิงสุนัขจรจัดขนาดใหญ่ดูแลระยะยาวและรักษาพยาบาล"], province: "ชลบุรี", lat: 12.9236, lng: 100.8825 },
             { id: 5, name: "ARK Foundation Thailand", phone: "", email: "arkfoundationthailand@gmail.com", website: "", facebook: "ARK Foundation Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["รับบริจาคเงิน อาหาร และของใช้สัตว์", "ศูนย์พักพิงหมาแมวจรจัด รับสัตว์ถูกทอดทิ้งจำนวนมาก"], province: "เชียงใหม่", lat: 18.7061, lng: 98.9817 },
-            { id: 6, name: "The Voice Foundation", phone: "", email: "thevoicefoundation@gmail.com", website: "", facebook: "The Voice Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["รับบริจาคผ่านเพจและกิจกรรมของมูลนิธิ", "ช่วยเหลือและพักพิงสัตว์ถูกทารุณและสัตว์จรจัด"], province: "กรุงเทพฯ", lat: 13.7500, lng: 100.5400 },
-            { id: 7, name: "Watchdog Thailand (ศูนย์พักพิง)", phone: "081-836-9211", email: "", website: "https://www.watchdogthailand.org", facebook: "", donationUrl: "", accepts: ["เงิน","ที่พักพิง"], description: ["รับบริจาคเพื่อดูแลสัตว์ในคดีทารุณกรรม", "มีศูนย์พักพิงรองรับสัตว์ที่ได้รับการช่วยเหลือ"], province: "กรุงเทพฯ", lat: null, lng: null },
-            { id: 8, name: "มูลนิธิรักษ์หมา (Rak Ma Foundation)", phone: "", email: "", website: "http://rakmafoundation.org", facebook: "Rak Ma Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ยา","ที่พักพิง","หาบ้าน"], description: ["รับบริจาคเงิน อาหาร ยา", "พักพิงและดูแลสุนัข–แมวจรจัด พร้อมหาบ้านใหม่"], province: "กรุงเทพฯ", lat: 13.75, lng: 100.5 },
-            { id: 9, name: "มูลนิธิบ้านสัตว์เลี้ยงจรจัด", phone: "", email: "", website: "", facebook: "Stray Animal Shelter Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["รับบริจาคและของใช้สัตว์", "พักพิงสัตว์จรจัดและสัตว์บาดเจ็บ"], province: "", lat: null, lng: null },
-            { id: 10, name: "มูลนิธิเพื่อสัตว์ (AWFT)", phone: "", email: "", website: "http://awftfoundation.org", facebook: "AWFT Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["ช่วยเหลือ พักพิง และทำหมันสัตว์จรจัด", "รับบริจาคทั้งอาหารและของใช้สัตว์"], province: "กรุงเทพฯ", lat: 13.756, lng: 100.501 },
-            { id: 11, name: "บ้านหมาจรจัดคลองหลวง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดคลองหลวง", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["รับบริจาคอาหาร ยา และค่าใช้จ่ายรักษา", "ศูนย์พักพิงขนาดเล็กโดยอาสาสมัคร"], province: "ปทุมธานี", lat: 14.065, lng: 100.640 },
-            { id: 12, name: "บ้านสี่ขา (Ban See Kha Dog Shelter)", phone: "", email: "", website: "", facebook: "บ้านสี่ขา Ban See Kha", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["รับบริจาคอาหาร ยา และค่ารักษา", "ศูนย์พักพิงสุนัขจรจัด ดูแลระยะยาวโดยอาสาสมัคร"], province: "กรุงเทพฯ", lat: 13.700, lng: 100.600 },
-            { id: 13, name: "บ้านหมาจรจัดมีนบุรี", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดมีนบุรี", donationUrl: "", accepts: ["อาหาร","เวชภัณฑ์"], description: ["รับบริจาคอาหารสุนัขและเวชภัณฑ์", "ดูแลหมาจรจัดในชุมชนและพื้นที่ใกล้เคียง"], province: "กรุงเทพฯ", lat: 13.813, lng: 100.720 },
-            { id: 14, name: "บ้านหมาจรจัดบางบัวทอง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางบัวทอง", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["ศูนย์พักพิงขนาดเล็ก ดูแลหมาที่ถูกทอดทิ้ง", "รับบริจาคเงิน อาหาร และของใช้สัตว์"], province: "นนทบุรี", lat: 13.912, lng: 100.410 },
-            { id: 15, name: "บ้านหมาจรจัดบางปะกอก", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางปะกอก", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา"], description: ["ดูแลสุนัขจรจัดและสุนัขป่วยในชุมชน", "รับบริจาคอาหารสุนัข ยารักษา และค่ารักษาพยาบาล"], province: "กรุงเทพฯ", lat: 13.680, lng: 100.490 }
+            { id: 6, name: "The Voice Foundation", phone: "", email: "thevoicefoundation@gmail.com", website: "", facebook: "The Voice Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["ช่วยเหลือและพักพิงสัตว์ถูกทารุณและสัตว์จรจัด"], province: "กรุงเทพฯ", lat: 13.75, lng: 100.54 },
+            { id: 7, name: "Watchdog Thailand (ศูนย์พักพิง)", phone: "081-836-9211", email: "", website: "https://www.watchdogthailand.org", facebook: "", donationUrl: "", accepts: ["เงิน","ที่พักพิง"], description: ["รับบริจาคเพื่อดูแลสัตว์ในคดีทารุณกรรม"], province: "กรุงเทพฯ", lat: null, lng: null },
+            { id: 8, name: "มูลนิธิรักษ์หมา (Rak Ma Foundation)", phone: "", email: "", website: "http://rakmafoundation.org", facebook: "Rak Ma Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ยา","ที่พักพิง","หาบ้าน"], description: ["พักพิงและดูแลสุนัข–แมวจรจัด พร้อมหาบ้านใหม่"], province: "กรุงเทพฯ", lat: null, lng: null },
+            { id: 9, name: "มูลนิธิบ้านสัตว์เลี้ยงจรจัด", phone: "", email: "", website: "", facebook: "Stray Animal Shelter Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["พักพิงสัตว์จรจัดและสัตว์บาดเจ็บ"], province: "", lat: null, lng: null },
+            { id: 10, name: "มูลนิธิเพื่อสัตว์ (AWFT)", phone: "", email: "", website: "http://awftfoundation.org", facebook: "AWFT Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["ช่วยเหลือ พักพิง และทำหมันสัตว์จรจัด"], province: "กรุงเทพฯ", lat: 13.75, lng: 100.5 },
+            { id: 11, name: "บ้านหมาจรจัดคลองหลวง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดคลองหลวง", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["ศูนย์พักพิงขนาดเล็กโดยอาสาสมัคร"], province: "ปทุมธานี", lat: 14.06, lng: 100.64 },
+            { id: 12, name: "บ้านสี่ขา (Ban See Kha Dog Shelter)", phone: "", email: "", website: "", facebook: "บ้านสี่ขา Ban See Kha", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["ดูแลสุนัขจรจัดระยะยาวโดยอาสาสมัคร"], province: "กรุงเทพฯ", lat: 13.70, lng: 100.60 },
+            { id: 13, name: "บ้านหมาจรจัดมีนบุรี", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดมีนบุรี", donationUrl: "", accepts: ["อาหาร","เวชภัณฑ์"], description: ["ดูแลหมาจรจัดในชุมชนและพื้นที่ใกล้เคียง"], province: "กรุงเทพฯ", lat: 13.81, lng: 100.72 },
+            { id: 14, name: "บ้านหมาจรจัดบางบัวทอง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางบัวทอง", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["ศูนย์พักพิงขนาดเล็ก ดูแลหมาที่ถูกทอดทิ้ง"], province: "นนทบุรี", lat: 13.91, lng: 100.41 },
+            { id: 15, name: "บ้านหมาจรจัดบางปะกอก", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางปะกอก", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา"], description: ["ดูแลสุนัขจรจัดและสุนัขป่วยในชุมชน"], province: "กรุงเทพฯ", lat: 13.68, lng: 100.49 }
         ];
 
         let currentFilter = 'ทั้งหมด';
@@ -150,8 +149,7 @@
             
             let filtered = foundations.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
-                                     item.province.toLowerCase().includes(searchTerm) ||
-                                     item.accepts.some(tag => tag.includes(searchTerm));
+                                     item.province.toLowerCase().includes(searchTerm);
                 const matchesFilter = currentFilter === 'ทั้งหมด' || 
                                      item.accepts.some(tag => tag.includes(currentFilter));
                 return matchesSearch && matchesFilter;
@@ -172,7 +170,7 @@
                         <h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition-colors leading-tight">${item.name}</h3>
                         ${item.province ? `<span class="text-[10px] bg-green-50 px-2 py-1 rounded-lg text-green-600 font-bold whitespace-nowrap">${item.province}</span>` : ''}
                     </div>
-                    <p class="text-gray-500 text-sm mb-5 line-clamp-2 leading-relaxed flex-grow">${item.description[0]}</p>
+                    <p class="text-gray-500 text-sm mb-5 line-clamp-2 flex-grow leading-relaxed">${item.description[0]}</p>
                     <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
                         ${userLocation && item.lat ? `
                             <span class="text-xs text-green-600 font-bold">📍 ${getDistance(userLocation.lat, userLocation.lng, item.lat, item.lng).toFixed(1)} กม.</span>
@@ -183,18 +181,16 @@
             `).join('');
         }
 
-        // --- New Feature: Vertical Bullet UI for Accepts ---
         function openModal(id) {
             const item = foundations.find(f => f.id === id);
             const body = document.getElementById('modalBody');
             body.innerHTML = `
                 <div class="text-center mb-10">
                     <h2 class="text-3xl font-bold mb-2">${item.name}</h2>
-                    <span class="text-green-600 font-bold bg-green-50 px-4 py-1 rounded-full">${item.province || 'ศูนย์พักพิงสัตว์จรจัด'}</span>
+                    <span class="text-green-600 font-bold bg-green-50 px-4 py-1 rounded-full text-sm">${item.province || 'ศูนย์พักพิงสัตว์'}</span>
                 </div>
                 
                 <div class="space-y-8">
-                    <!-- Adjusted Section: Vertical Bullets -->
                     <div class="bg-green-50/50 p-6 rounded-3xl">
                         <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2">
                             <span class="text-xl">🎁</span> ต้องการรับบริจาค:
@@ -230,7 +226,7 @@
             setTimeout(() => document.getElementById('modalContentContainer').classList.remove('translate-y-full'), 10);
         }
 
-        // Other support functions
+        // --- Support Functions ---
         function getLocation() {
             const btn = document.getElementById('geoBtn');
             const text = document.getElementById('geoBtnText');
@@ -242,7 +238,7 @@
                     btn.classList.add('geo-active');
                     renderList();
                 }, (err) => {
-                    alert("กรุณาเปิดการเข้าถึงพิกัดเพื่อใช้งานฟีเจอร์นี้");
+                    alert("กรุณาเปิดการเข้าถึงพิกัด");
                     text.innerText = "ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)";
                 });
             }
