@@ -29,7 +29,7 @@
         </div>
     </nav>
 
-    <!-- Header / Hero Section (ปรับปรุงการขึ้นบรรทัดใหม่) -->
+    <!-- Header / Hero Section -->
     <header class="hero-gradient pt-8 pb-12 px-4 border-b border-green-100">
         <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8">
             <div class="flex-1 text-center md:text-left">
@@ -58,7 +58,7 @@
         </div>
     </header>
 
-    <!-- Filter Bar (เอาเงินบริจาคออก) -->
+    <!-- Filter Bar -->
     <div class="bg-white sticky top-16 z-40 border-b border-gray-100 shadow-sm">
         <div id="filterContainer" class="max-w-5xl mx-auto px-4 py-4 flex gap-2 overflow-x-auto no-scrollbar">
             <button data-category="ทั้งหมด" onclick="setFilter('ทั้งหมด')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border text-sm font-medium transition-all bg-green-600 text-white border-green-600">ทั้งหมด</button>
@@ -111,13 +111,24 @@
         </div>
     </footer>
 
-    <!-- Detail Modal -->
+    <!-- Detail Modal (แก้ไขปุ่มปิดเป็น X มุมขวา) -->
     <div id="detailModal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] p-8 transform translate-y-full transition-transform duration-300 max-h-[92vh] overflow-y-auto" id="modalContentContainer">
-            <div class="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-8"></div>
-            <div id="modalBody" class="max-w-2xl mx-auto"></div>
-            <button onclick="closeModal()" class="w-full mt-8 py-4 bg-gray-100 rounded-2xl font-bold text-gray-500 hover:bg-gray-200 transition-all">ปิดหน้าต่าง</button>
+            
+            <!-- ปุ่มกากบาท (X) ปิด Modal -->
+            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 bg-gray-100 rounded-full transition-colors z-10 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <!-- แถบดึงสำหรับ Mobile -->
+            <div class="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-8 md:hidden"></div>
+            
+            <div id="modalBody" class="max-w-2xl mx-auto">
+                <!-- Content injected here -->
+            </div>
         </div>
     </div>
 
@@ -185,7 +196,7 @@
             const item = foundations.find(f => f.id === id);
             const body = document.getElementById('modalBody');
             body.innerHTML = `
-                <div class="text-center mb-10">
+                <div class="text-center mb-10 pr-6"> <!-- เว้นที่ให้ปุ่ม X -->
                     <h2 class="text-3xl font-bold mb-2">${item.name}</h2>
                     <span class="text-green-600 font-bold bg-green-50 px-4 py-1 rounded-full text-sm">${item.province || 'ศูนย์พักพิงสัตว์'}</span>
                 </div>
@@ -222,25 +233,42 @@
                 </div>
             `;
             document.getElementById('detailModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // กันเลื่อนพื้นหลัง
             setTimeout(() => document.getElementById('modalContentContainer').classList.remove('translate-y-full'), 10);
         }
 
-        // --- Support Functions ---
+        // --- ระบบหาตำแหน่งที่ตั้ง (ปรับปรุงสำหรับ iOS) ---
         function getLocation() {
             const btn = document.getElementById('geoBtn');
             const text = document.getElementById('geoBtnText');
+            
             if (navigator.geolocation) {
-                text.innerText = "กำลังเข้าถึงพิกัดของคุณ...";
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                    text.innerText = "เรียงลำดับจากใกล้คุณที่สุด";
-                    btn.classList.add('geo-active');
-                    renderList();
-                }, (err) => {
-                    alert("กรุณาเปิดการเข้าถึงพิกัด");
-                    text.innerText = "ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)";
-                });
+                text.innerText = "กำลังเข้าถึงพิกัด...";
+                
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 8000,
+                    maximumAge: 0
+                };
+
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                        text.innerText = "เรียงลำดับจากใกล้คุณที่สุด";
+                        btn.classList.add('geo-active');
+                        renderList();
+                    },
+                    (err) => {
+                        // คำแนะนำเปิด Permission สำหรับ iOS/Safari
+                        if(err.code === 1) { // PERMISSION_DENIED
+                            alert("❌ คุณยังไม่ได้อนุญาตให้เข้าถึงตำแหน่ง\n\nวิธีเปิดบน iOS:\n1. ไปที่ Settings (การตั้งค่า) > Safari\n2. เลื่อนลงไปที่ Location (ตำแหน่งที่ตั้ง)\n3. เลือก 'Allow' (อนุญาต)");
+                        } else {
+                            alert("ไม่สามารถเข้าถึงตำแหน่งได้: " + err.message);
+                        }
+                        text.innerText = "ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)";
+                    },
+                    options
+                );
             }
         }
 
