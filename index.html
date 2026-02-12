@@ -3,296 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetShare - บริจาคอาหารสัตว์ใกล้ฉัน</title>
+    <title>PetShare - Charity for Stray Animals</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Prompt', sans-serif; background-color: #F9FAFB; color: #111827; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .geo-active { background-color: #16A34A !important; color: white !important; border-color: #16A34A !important; }
         .hero-gradient { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
+        .geo-active { background-color: #16A34A !important; color: white !important; border-color: #16A34A !important; }
+        #searchTray, #searchTrayMobile { max-height: 300px; overflow-y: auto; z-index: 110; }
+        .search-item:hover { background-color: #f3f4f6; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col relative">
 
-    <!-- Navbar -->
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
-        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl">🐾</span>
-                <span class="font-bold text-xl tracking-tight text-green-700">PetShare.th</span>
+    <!-- Navbar / Top Bar -->
+    <nav class="bg-white sticky top-0 z-[100] border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            <!-- Logo -->
+            <div class="flex items-center shrink-0">
+                <span class="font-bold text-lg tracking-tight text-green-700">PetShare.th</span>
             </div>
-            <a href="mailto:suggest@example.com?subject=แนะนำข้อมูลมูลนิธิเพิ่มเติม" class="text-sm font-medium text-green-600 bg-green-50 px-4 py-2 rounded-full hover:bg-green-100 transition-all">
-                แนะนำ/แก้ไขข้อมูล
-            </a>
+            
+            <!-- Search Area (Desktop) -->
+            <div class="flex-grow max-w-xl relative hidden md:block">
+                <div class="relative">
+                    <input type="text" id="topSearchInput" oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" placeholder="ค้นหา..." 
+                        class="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 border-none focus:ring-2 focus:ring-green-500 text-sm">
+                    <span class="absolute left-3 top-2.5 text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                </div>
+                <div id="searchTray" class="absolute top-full left-0 w-full bg-white shadow-xl rounded-b-xl border border-gray-100 mt-1 hidden"></div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="mailto:suggest@example.com" class="hidden sm:block text-xs font-medium text-green-600 px-2 py-2" id="ui-suggest">แนะนำ/แก้ไขข้อมูล</a>
+                
+                <!-- Lang Switch -->
+                <div class="flex bg-gray-100 p-1 rounded-lg text-[10px] font-bold">
+                    <button onclick="changeLang('th')" id="btn-th" class="px-2 py-1 rounded transition-all bg-white shadow-sm text-green-700">TH</button>
+                    <button onclick="changeLang('en')" id="btn-en" class="px-2 py-1 rounded transition-all text-gray-400">EN</button>
+                </div>
+
+                <!-- Hamburger Button -->
+                <button onclick="toggleSidebar(true)" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Search Area -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative">
+                <input type="text" id="topSearchInputMobile" oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" placeholder="ค้นหา..." 
+                    class="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 border-none text-sm">
+                <span class="absolute left-3 top-2.5 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <div id="searchTrayMobile" class="absolute top-full left-0 w-full bg-white shadow-xl rounded-b-xl border border-gray-100 mt-1 hidden"></div>
+            </div>
         </div>
     </nav>
 
-    <!-- Header / Hero Section -->
-    <header class="hero-gradient pt-8 pb-12 px-4 border-b border-green-100">
-        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8">
-            <div class="flex-1 text-center md:text-left">
-                <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-                    เพราะทุกชีวิต <br><span class="text-green-600">มีความหมาย</span>
-                </h1>
-                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
-                    รวบรวมมูลนิธิและศูนย์พักพิงสัตว์จรจัดทั่วประเทศไทย <br class="hidden md:block"> เพื่อให้เพื่อนสี่ขาอิ่มท้องและมีชีวิตที่ดีขึ้น
-                </p>
-                <div class="flex flex-col gap-4 max-w-md mx-auto md:mx-0">
-                    <div class="relative">
-                        <input type="text" id="searchInput" placeholder="ค้นหาชื่อมูลนิธิ หรือจังหวัด..." 
-                            class="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-xl focus:ring-2 focus:ring-green-500 outline-none text-lg">
-                        <span class="absolute left-4 top-4 text-2xl opacity-30">🔍</span>
-                    </div>
-                    <button id="geoBtn" onclick="getLocation()" 
-                        class="flex items-center justify-center gap-2 bg-white border-2 border-green-600 text-green-600 font-bold py-3 px-6 rounded-2xl hover:bg-green-50 transition-all shadow-sm">
-                        📍 <span id="geoBtnText">ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)</span>
-                    </button>
+    <!-- Sidebar / Hamburger Menu -->
+    <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/50 z-[150] hidden backdrop-blur-sm"></div>
+    <aside id="sidebar" class="fixed top-0 right-0 h-full w-80 bg-white z-[160] shadow-2xl transform translate-x-full transition-transform duration-300 p-8">
+        <button onclick="toggleSidebar(false)" class="absolute top-6 right-6 text-gray-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="mt-12 space-y-8">
+            <div>
+                <h4 class="text-xs font-bold text-green-600 uppercase tracking-widest mb-4" id="ui-side-about-title">เกี่ยวกับเรา</h4>
+                <a href="https://www.facebook.com/share/18621Z9YsA/?mibextid=wwXIfr" target="_blank" class="block text-gray-900 font-medium hover:text-green-600 transition-colors">Facebook Page</a>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-green-600 uppercase tracking-widest mb-4" id="ui-side-contact-title">เบอร์โทรศัพท์ติดต่อ</h4>
+                <div class="space-y-2">
+                    <a href="tel:0645457879" class="block text-gray-900 font-medium hover:text-green-600 transition-colors">064 545 7879</a>
+                    <a href="tel:0918159754" class="block text-gray-900 font-medium hover:text-green-600 transition-colors">091 815 9754</a>
                 </div>
             </div>
-            <div class="flex-1 hidden md:block">
-                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=600" 
-                     alt="Happy Dogs" class="rounded-[2.5rem] shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+        </div>
+    </aside>
+
+    <!-- Header / Hero Section -->
+    <header class="hero-gradient pt-12 pb-16 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6" id="ui-hero-title">
+                เพราะทุกชีวิต <br><span class="text-green-600">มีความหมาย</span>
+            </h1>
+            <div class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto space-y-2" id="ui-hero-desc">
+                <p>รวบรวมมูลนิธิและศูนย์พักพิงสัตว์จรจัดทั่วประเทศไทย</p>
+                <p>เพื่อให้เพื่อนสี่ขาอิ่มท้องและมีชีวิตที่ดีขึ้น</p>
             </div>
+            <button id="geoBtn" onclick="getLocation()" 
+                class="inline-flex items-center bg-white border-2 border-green-600 text-green-600 font-bold py-4 px-8 rounded-2xl hover:bg-green-50 transition-all shadow-lg">
+                <span id="geoBtnText">ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)</span>
+            </button>
         </div>
     </header>
 
-    <!-- Filter Bar -->
-    <div class="bg-white sticky top-16 z-40 border-b border-gray-100 shadow-sm">
-        <div id="filterContainer" class="max-w-5xl mx-auto px-4 py-4 flex gap-2 overflow-x-auto no-scrollbar">
-            <button data-category="ทั้งหมด" onclick="setFilter('ทั้งหมด')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border text-sm font-medium transition-all bg-green-600 text-white border-green-600">ทั้งหมด</button>
-            <button data-category="อาหาร" onclick="setFilter('อาหาร')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">🦴 อาหาร</button>
-            <button data-category="ของใช้" onclick="setFilter('ของใช้')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">📦 ของใช้</button>
-            <button data-category="รักษา" onclick="setFilter('รักษา')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">🏥 ค่ารักษา</button>
-            <button data-category="ที่พักพิง" onclick="setFilter('ที่พักพิง')" class="filter-chip whitespace-nowrap px-5 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-600 hover:border-green-300">🏠 ที่พักพิง</button>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
-        <div id="foundationList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards will be injected here -->
-        </div>
+        <div id="foundationList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-8 px-6 mt-10">
-        <div class="max-w-5xl mx-auto text-center md:text-left">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+    <footer class="bg-gray-900 text-white pt-12 pb-8 px-6 mt-auto">
+        <div class="max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
                 <div>
-                    <div class="flex items-center gap-2 mb-4 justify-center md:justify-start">
-                        <span class="text-2xl">🐾</span>
-                        <span class="font-bold text-xl tracking-tight">PetShare.th</span>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="font-bold text-xl tracking-tight text-white">PetShare.th</span>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
+                    <p class="text-gray-400 text-sm leading-relaxed" id="ui-footer-about">
                         แพลตฟอร์มกลางเพื่อรวบรวมข้อมูลการช่วยเหลือสัตว์ทั่วไทย เพื่อให้เพื่อนสี่ขาได้รับความช่วยเหลือที่รวดเร็วที่สุด
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs">ติดต่อเรา</h4>
+                    <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs" id="ui-footer-contact-title">ติดต่อเรา</h4>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        ท่านต้องการเพิ่มมูลนิธิ หรือแก้ไขพิกัด ติดต่อ: <br>
+                        <span id="ui-footer-contact-desc">ต้องการเพิ่มมูลนิธิ หรือแก้ไขพิกัด ติดต่อ:</span> <br>
                         <a href="mailto:contact@petshare.th" class="underline text-white">contact@petshare.th</a>
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs">คำชี้แจง</h4>
-                    <p class="text-[10px] text-gray-500 leading-relaxed italic">
+                    <h4 class="font-bold mb-4 text-green-400 uppercase tracking-wider text-xs" id="ui-footer-warn-title">คำชี้แจง</h4>
+                    <p class="text-[10px] text-gray-500 leading-relaxed italic" id="ui-footer-warn-desc">
                         ข้อมูลอาจเปลี่ยนแปลงได้ กรุณาตรวจสอบจากช่องทางทางการอีกครั้งก่อนการบริจาค เพื่อความปลอดภัยของท่าน
                     </p>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 text-center md:text-left">
+            <div class="border-t border-gray-800 pt-6 text-center">
                 <p class="text-gray-500 text-[10px] uppercase tracking-widest">
-                    &copy; 2024 PetShare Thailand - Built with ❤️ for animals
+                    &copy; 2024 PetShare Thailand - Built with passion for animals
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- Detail Modal (แก้ไขปุ่มปิดเป็น X มุมขวา) -->
-    <div id="detailModal" class="fixed inset-0 z-[60] hidden">
+    <!-- Detail Modal -->
+    <div id="detailModal" class="fixed inset-0 z-[200] hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] p-8 transform translate-y-full transition-transform duration-300 max-h-[92vh] overflow-y-auto" id="modalContentContainer">
-            
-            <!-- ปุ่มกากบาท (X) ปิด Modal -->
-            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 bg-gray-100 rounded-full transition-colors z-10 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
+            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-gray-400 bg-gray-100 rounded-full">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-
-            <!-- แถบดึงสำหรับ Mobile -->
-            <div class="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-8 md:hidden"></div>
-            
-            <div id="modalBody" class="max-w-2xl mx-auto">
-                <!-- Content injected here -->
-            </div>
+            <div id="modalBody" class="max-w-2xl mx-auto"></div>
         </div>
     </div>
 
     <script>
+        const uiText = {
+            th: {
+                heroTitle: 'เพราะทุกชีวิต <br><span class="text-green-600">มีความหมาย</span>',
+                heroDesc: '<p>รวบรวมมูลนิธิและศูนย์พักพิงสัตว์จรจัดทั่วประเทศไทย</p><p>เพื่อให้เพื่อนสี่ขาอิ่มท้องและมีชีวิตที่ดีขึ้น</p>',
+                geoBtn: 'ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)',
+                geoBtnActive: 'เรียงลำดับจากใกล้คุณที่สุด',
+                suggest: 'แนะนำ/แก้ไขข้อมูล',
+                helpBtn: 'รายละเอียด',
+                needDonation: 'ต้องการรับบริจาค:',
+                description: 'รายละเอียด:',
+                call: 'โทรสอบถาม: ',
+                copyEmail: 'คัดลอกอีเมลบริจาค',
+                donateOnline: 'บริจาคผ่านช่องทางออนไลน์',
+                aboutTitle: 'เกี่ยวกับเรา',
+                contactTitle: 'เบอร์โทรศัพท์ติดต่อ',
+                noResult: 'ไม่พบข้อมูล',
+                footerAbout: 'แพลตฟอร์มกลางเพื่อรวบรวมข้อมูลการช่วยเหลือสัตว์ทั่วไทย เพื่อให้เพื่อนสี่ขาได้รับความช่วยเหลือที่รวดเร็วที่สุด',
+                footerContactTitle: 'ติดต่อเรา',
+                footerContactDesc: 'ต้องการเพิ่มมูลนิธิ หรือแก้ไขพิกัด ติดต่อ:',
+                footerWarnTitle: 'คำชี้แจง',
+                footerWarnDesc: 'ข้อมูลอาจเปลี่ยนแปลงได้ กรุณาตรวจสอบจากช่องทางทางการอีกครั้งก่อนการบริจาค เพื่อความปลอดภัยของท่าน'
+            },
+            en: {
+                heroTitle: 'Every Life <br><span class="text-green-600">Matters</span>',
+                heroDesc: '<p>Foundations and stray animal shelters across Thailand</p><p>For a better life for our four-legged friends</p>',
+                geoBtn: 'Find Nearby',
+                geoBtnActive: 'Sorted by distance',
+                suggest: 'Suggest/Edit',
+                helpBtn: 'View Details',
+                needDonation: 'Accepting Donations:',
+                description: 'Description:',
+                call: 'Call: ',
+                copyEmail: 'Copy Email',
+                donateOnline: 'Donate Online',
+                aboutTitle: 'About Us',
+                contactTitle: 'Contact Numbers',
+                noResult: 'No data found',
+                footerAbout: 'A central platform gathering stray animal help info across Thailand for faster assistance.',
+                footerContactTitle: 'Contact Us',
+                footerContactDesc: 'To add a foundation or edit info, contact:',
+                footerWarnTitle: 'Disclaimer',
+                footerWarnDesc: 'Information may change. Please verify with the foundation directly before donating.'
+            }
+        };
+
         const foundations = [
-            { id: 1, name: "Soi Dog Foundation", phone: "076-681-029", email: "donation@soidog.org", website: "https://www.soidog.org", facebook: "SoiDogPage", donationUrl: "https://www.soidog.org/content/make-donation", accepts: ["เงิน","อาหาร","รักษา","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["รับบริจาคทั้ง เงิน และช่วยสนับสนุนงานสัตว์ในพื้นที่ต่าง ๆ", "มูลนิธิช่วยเหลือหมาแมวจรจัดใหญ่สุดแห่งหนึ่งในไทย ให้บริการรักษา ทำหมัน และที่พักพิง"], province: "ภูเก็ต", lat: 8.1691, lng: 98.3472 },
-            { id: 2, name: "Baan Maa", phone: "+66 952 200 143", email: "accounts@baanmaa.org", website: "https://baanmaa.org/donate/", facebook: "", donationUrl: "https://baanmaa.org/donate/", accepts: ["เงิน","อาหาร","รักษา","วัคซีน","หาบ้าน"], description: ["รับบริจาคทั้งเงินและเข้าร่วมโครงการต่าง ๆ", "ช่วยเหลือหมาจรจัดในไทย ให้การช่วยอาหาร วัคซีน การรักษา และหาที่อยู่ให้สัตว์"], province: "เชียงใหม่", lat: 18.7883, lng: 98.9853 },
-            { id: 3, name: "PAWS Bangkok", phone: "", email: "", website: "", facebook: "https://www.facebook.com/pawsbangkok/", donationUrl: "", accepts: ["อาหาร","ของใช้","สนับสนุนการดูแล"], description: ["รับบริจาคผ่านเพจทางการ", "รับบริจาคอาหารแมว/หมา และของใช้ที่ช่วยดูแลสัตว์"], province: "กรุงเทพฯ", lat: 13.7563, lng: 100.5018 },
-            { id: 4, name: "The Man That Rescues Dogs (TMTRD)", phone: "", email: "", website: "https://www.tmtrd.org", facebook: "The Man That Rescues Dogs", donationUrl: "https://www.tmtrd.org", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง","รักษา"], description: ["ศูนย์พักพิงสุนัขจรจัดขนาดใหญ่ดูแลระยะยาวและรักษาพยาบาล"], province: "ชลบุรี", lat: 12.9236, lng: 100.8825 },
-            { id: 5, name: "ARK Foundation Thailand", phone: "", email: "arkfoundationthailand@gmail.com", website: "", facebook: "ARK Foundation Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["รับบริจาคเงิน อาหาร และของใช้สัตว์", "ศูนย์พักพิงหมาแมวจรจัด รับสัตว์ถูกทอดทิ้งจำนวนมาก"], province: "เชียงใหม่", lat: 18.7061, lng: 98.9817 },
-            { id: 6, name: "The Voice Foundation", phone: "", email: "thevoicefoundation@gmail.com", website: "", facebook: "The Voice Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["ช่วยเหลือและพักพิงสัตว์ถูกทารุณและสัตว์จรจัด"], province: "กรุงเทพฯ", lat: 13.75, lng: 100.54 },
-            { id: 7, name: "Watchdog Thailand (ศูนย์พักพิง)", phone: "081-836-9211", email: "", website: "https://www.watchdogthailand.org", facebook: "", donationUrl: "", accepts: ["เงิน","ที่พักพิง"], description: ["รับบริจาคเพื่อดูแลสัตว์ในคดีทารุณกรรม"], province: "กรุงเทพฯ", lat: null, lng: null },
-            { id: 8, name: "มูลนิธิรักษ์หมา (Rak Ma Foundation)", phone: "", email: "", website: "http://rakmafoundation.org", facebook: "Rak Ma Foundation", donationUrl: "", accepts: ["เงิน","อาหาร","ยา","ที่พักพิง","หาบ้าน"], description: ["พักพิงและดูแลสุนัข–แมวจรจัด พร้อมหาบ้านใหม่"], province: "กรุงเทพฯ", lat: null, lng: null },
-            { id: 9, name: "มูลนิธิบ้านสัตว์เลี้ยงจรจัด", phone: "", email: "", website: "", facebook: "Stray Animal Shelter Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["พักพิงสัตว์จรจัดและสัตว์บาดเจ็บ"], province: "", lat: null, lng: null },
-            { id: 10, name: "มูลนิธิเพื่อสัตว์ (AWFT)", phone: "", email: "", website: "http://awftfoundation.org", facebook: "AWFT Thailand", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ทำหมัน-วัคซีน","ที่พักพิง"], description: ["ช่วยเหลือ พักพิง และทำหมันสัตว์จรจัด"], province: "กรุงเทพฯ", lat: 13.75, lng: 100.5 },
-            { id: 11, name: "บ้านหมาจรจัดคลองหลวง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดคลองหลวง", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["ศูนย์พักพิงขนาดเล็กโดยอาสาสมัคร"], province: "ปทุมธานี", lat: 14.06, lng: 100.64 },
-            { id: 12, name: "บ้านสี่ขา (Ban See Kha Dog Shelter)", phone: "", email: "", website: "", facebook: "บ้านสี่ขา Ban See Kha", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา","ที่พักพิง"], description: ["ดูแลสุนัขจรจัดระยะยาวโดยอาสาสมัคร"], province: "กรุงเทพฯ", lat: 13.70, lng: 100.60 },
-            { id: 13, name: "บ้านหมาจรจัดมีนบุรี", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดมีนบุรี", donationUrl: "", accepts: ["อาหาร","เวชภัณฑ์"], description: ["ดูแลหมาจรจัดในชุมชนและพื้นที่ใกล้เคียง"], province: "กรุงเทพฯ", lat: 13.81, lng: 100.72 },
-            { id: 14, name: "บ้านหมาจรจัดบางบัวทอง", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางบัวทอง", donationUrl: "", accepts: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], description: ["ศูนย์พักพิงขนาดเล็ก ดูแลหมาที่ถูกทอดทิ้ง"], province: "นนทบุรี", lat: 13.91, lng: 100.41 },
-            { id: 15, name: "บ้านหมาจรจัดบางปะกอก", phone: "", email: "", website: "", facebook: "บ้านหมาจรจัดบางปะกอก", donationUrl: "", accepts: ["อาหาร","ยา","ค่ารักษา"], description: ["ดูแลสุนัขจรจัดและสุนัขป่วยในชุมชน"], province: "กรุงเทพฯ", lat: 13.68, lng: 100.49 }
+            { id: 1, name_th: "Soi Dog Foundation", name_en: "Soi Dog Foundation", phone: "076-681-029", email: "donation@soidog.org", website: "https://www.soidog.org", facebook: "SoiDogPage", donationUrl: "https://www.soidog.org/content/make-donation", accepts_th: ["เงิน","อาหาร","รักษา","ทำหมัน-วัคซีน","ที่พักพิง"], accepts_en: ["Money","Food","Medical","Vaccine","Shelter"], desc_th: ["มูลนิธิช่วยเหลือหมาแมวจรจัดใหญ่สุดแห่งหนึ่งในไทย"], desc_en: ["One of the largest stray animal foundations in Thailand."], province_th: "ภูเก็ต", province_en: "Phuket", lat: 8.1691, lng: 98.3472 },
+            { id: 2, name_th: "Baan Maa", name_en: "Baan Maa", phone: "+66 952 200 143", email: "accounts@baanmaa.org", website: "https://baanmaa.org/donate/", facebook: "", donationUrl: "https://baanmaa.org/donate/", accepts_th: ["เงิน","อาหาร","รักษา","วัคซีน","หาบ้าน"], accepts_en: ["Money","Food","Medical","Vaccine","Rehoming"], desc_th: ["ช่วยเหลือหมาจรจัดในไทย ให้การช่วยอาหาร วัคซีน"], desc_en: ["Helping stray dogs in Thailand with food and vaccines."], province_th: "เชียงใหม่", province_en: "Chiang Mai", lat: 18.7883, lng: 98.9853 },
+            { id: 3, name_th: "PAWS Bangkok", name_en: "PAWS Bangkok", facebook: "https://www.facebook.com/pawsbangkok/", accepts_th: ["อาหาร","ของใช้","สนับสนุนการดูแล"], accepts_en: ["Food","Supplies","Care Support"], desc_th: ["รับบริจาคอาหารแมว/หมา และของใช้ที่ช่วยดูแลสัตว์"], desc_en: ["Accepting dog/cat food and care supplies."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: 13.7563, lng: 100.5018 },
+            { id: 4, name_th: "The Man That Rescues Dogs", name_en: "The Man That Rescues Dogs", website: "https://www.tmtrd.org", facebook: "The Man That Rescues Dogs", donationUrl: "https://www.tmtrd.org", accepts_th: ["เงิน","อาหาร","ของใช้","ที่พักพิง","รักษา"], accepts_en: ["Money","Food","Supplies","Shelter","Medical"], desc_th: ["ศูนย์พักพิงสุนัขจรจัดขนาดใหญ่ดูแลระยะยาว"], desc_en: ["Large stray dog shelter with long-term care."], province_th: "ชลบุรี", province_en: "Chonburi", lat: 12.9236, lng: 100.8825 },
+            { id: 5, name_th: "ARK Foundation Thailand", name_en: "ARK Foundation Thailand", email: "arkfoundationthailand@gmail.com", facebook: "ARK Foundation Thailand", accepts_th: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], accepts_en: ["Money","Food","Supplies","Shelter"], desc_th: ["ศูนย์พักพิงหมาแมวจรจัด รับสัตว์ถูกทอดทิ้ง"], desc_en: ["Shelter for abandoned dogs and cats."], province_th: "เชียงใหม่", province_en: "Chiang Mai", lat: 18.7061, lng: 98.9817 },
+            { id: 6, name_th: "The Voice Foundation", name_en: "The Voice Foundation", email: "thevoicefoundation@gmail.com", facebook: "The Voice Foundation", accepts_th: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], accepts_en: ["Money","Food","Supplies","Shelter"], desc_th: ["ช่วยเหลือและพักพิงสัตว์ถูกทารุณและสัตว์จรจัด"], desc_en: ["Rescuing abused and stray animals."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: 13.75, lng: 100.54 },
+            { id: 7, name_th: "Watchdog Thailand", name_en: "Watchdog Thailand", phone: "081-836-9211", website: "https://www.watchdogthailand.org", accepts_th: ["เงิน","ที่พักพิง"], accepts_en: ["Money","Shelter"], desc_th: ["รับบริจาคเพื่อดูแลสัตว์ในคดีทารุณกรรม"], desc_en: ["Donations for animal abuse cases."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: null, lng: null },
+            { id: 8, name_th: "มูลนิธิรักษ์หมา", name_en: "Rak Ma Foundation", website: "rakmafoundation.org", facebook: "Rak Ma Foundation", accepts_th: ["เงิน","อาหาร","ยา","ที่พักพิง","หาบ้าน"], accepts_en: ["Money","Food","Med","Shelter","Adoption"], desc_th: ["พักพิงและดูแลสุนัข–แมจรจัด พร้อมหาบ้านใหม่"], desc_en: ["Caring for stray dogs and cats, finding new homes."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: null, lng: null },
+            { id: 11, name_th: "บ้านหมาจรจัดคลองหลวง", name_en: "Khlong Luang Dog", facebook: "บ้านหมาจรจัดคลองหลวง", accepts_th: ["อาหาร","ยา","รักษา","ที่พักพิง"], accepts_en: ["Food","Medical","Shelter"], desc_th: ["ศูนย์พักพิงขนาดเล็กโดยอาสาสมัคร"], desc_en: ["Small stray dog home run by volunteers."], province_th: "ปทุมธานี", province_en: "Pathum Thani", lat: 14.06, lng: 100.64 },
+            { id: 12, name_th: "บ้านสี่ขา", name_en: "Ban See Kha Shelter", facebook: "บ้านสี่ขา Ban See Kha", accepts_th: ["อาหาร","ยา","รักษา","ที่พักพิง"], accepts_en: ["Food","Medical","Shelter"], desc_th: ["ดูแลสุนัขจรจัดระยะยาวโดยอาสาสมัคร"], desc_en: ["Long-term stray dog care by volunteers."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: 13.70, lng: 100.60 },
+            { id: 13, name_th: "บ้านหมาจรจัดมีนบุรี", name_en: "Minburi Dog Home", facebook: "บ้านหมาจรจัดมีนบุรี", accepts_th: ["อาหาร","เวชภัณฑ์"], accepts_en: ["Food","Medical"], desc_th: ["ดูแลหมาจรจัดในชุมชนและพื้นที่ใกล้เคียง"], desc_en: ["Caring for stray dogs in Minburi community."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: 13.81, lng: 100.72 },
+            { id: 14, name_th: "บ้านหมาจรจัดบางบัวทอง", name_en: "Bang Bua Thong Home", facebook: "บ้านหมาจรจัดบางบัวทอง", accepts_th: ["เงิน","อาหาร","ของใช้","ที่พักพิง"], accepts_en: ["Money","Food","Supplies","Shelter"], desc_th: ["ศูนย์พักพิงขนาดเล็ก ดูแลหมาที่ถูกทอดทิ้ง"], desc_en: ["Small shelter for abandoned dogs."], province_th: "นนทบุรี", province_en: "Nonthaburi", lat: 13.91, lng: 100.41 },
+            { id: 15, name_th: "บ้านหมาจรจัดบางปะกอก", name_en: "Bang Pakok Dog Home", facebook: "บ้านหมาจรจัดบางปะกอก", accepts_th: ["อาหาร","ยา","รักษา"], accepts_en: ["Food","Medical"], desc_th: ["ดูแลสุนัขจรจัดและสุนัขป่วยในชุมชน"], desc_en: ["Caring for stray and sick dogs."], province_th: "กรุงเทพฯ", province_en: "Bangkok", lat: 13.68, lng: 100.49 }
         ];
 
-        let currentFilter = 'ทั้งหมด';
+        let currentLang = 'th';
         let userLocation = null;
 
-        function renderList() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const listEl = document.getElementById('foundationList');
+        function changeLang(lang) {
+            currentLang = lang;
+            document.getElementById('btn-th').className = `px-2 py-1 rounded transition-all ${lang==='th'?'bg-white shadow-sm text-green-700':'text-gray-400'}`;
+            document.getElementById('btn-en').className = `px-2 py-1 rounded transition-all ${lang==='en'?'bg-white shadow-sm text-green-700':'text-gray-400'}`;
             
-            let filtered = foundations.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
-                                     item.province.toLowerCase().includes(searchTerm);
-                const matchesFilter = currentFilter === 'ทั้งหมด' || 
-                                     item.accepts.some(tag => tag.includes(currentFilter));
-                return matchesSearch && matchesFilter;
+            const t = uiText[currentLang];
+            document.getElementById('ui-suggest').innerText = t.suggest;
+            document.getElementById('ui-hero-title').innerHTML = t.heroTitle;
+            document.getElementById('ui-hero-desc').innerHTML = t.heroDesc;
+            document.getElementById('geoBtnText').innerText = userLocation ? t.geoBtnActive : t.geoBtn;
+            document.getElementById('ui-side-about-title').innerText = t.aboutTitle;
+            document.getElementById('ui-side-contact-title').innerText = t.contactTitle;
+            document.getElementById('ui-footer-about').innerText = t.footerAbout;
+            document.getElementById('ui-footer-contact-title').innerText = t.footerContactTitle;
+            document.getElementById('ui-footer-contact-desc').innerText = t.footerContactDesc;
+            document.getElementById('ui-footer-warn-title').innerText = t.footerWarnTitle;
+            document.getElementById('ui-footer-warn-desc').innerText = t.footerWarnDesc;
+            
+            renderList();
+        }
+
+        function handleSearch(val) {
+            const tray = window.innerWidth >= 768 ? document.getElementById('searchTray') : document.getElementById('searchTrayMobile');
+            if (!val) { tray.classList.add('hidden'); renderList(); return; }
+
+            const filtered = foundations.filter(f => 
+                f.name_th.toLowerCase().includes(val.toLowerCase()) || 
+                f.name_en.toLowerCase().includes(val.toLowerCase()) ||
+                f.province_th.toLowerCase().includes(val.toLowerCase())
+            );
+
+            if (filtered.length > 0) {
+                tray.innerHTML = filtered.slice(0, 5).map(f => `
+                    <div class="search-item p-3 cursor-pointer border-b border-gray-50 flex flex-col" onclick="openModal(${f.id}); hideTrays();">
+                        <span class="font-bold text-sm text-gray-900">${currentLang === 'th' ? f.name_th : f.name_en}</span>
+                        <span class="text-[10px] text-gray-400">${currentLang === 'th' ? f.province_th : f.province_en}</span>
+                    </div>
+                `).join('');
+                tray.classList.remove('hidden');
+            } else {
+                tray.innerHTML = `<div class="p-4 text-xs text-gray-400 text-center">${uiText[currentLang].noResult}</div>`;
+                tray.classList.remove('hidden');
+            }
+            renderList(val);
+        }
+
+        function hideTrays() {
+            document.getElementById('searchTray').classList.add('hidden');
+            document.getElementById('searchTrayMobile').classList.add('hidden');
+        }
+
+        function toggleSidebar(show) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (show) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function renderList(searchVal = "") {
+            const val = searchVal.toLowerCase();
+            const listEl = document.getElementById('foundationList');
+            let filtered = foundations.filter(f => {
+                return f.name_th.toLowerCase().includes(val) || f.province_th.toLowerCase().includes(val) || f.name_en.toLowerCase().includes(val);
             });
 
             if (userLocation) {
-                filtered = filtered.sort((a, b) => {
-                    if (a.lat === null) return 1;
-                    if (b.lat === null) return -1;
-                    return getDistance(userLocation.lat, userLocation.lng, a.lat, a.lng) - 
-                           getDistance(userLocation.lat, userLocation.lng, b.lat, b.lng);
-                });
+                filtered.sort((a, b) => (a.lat && b.lat) ? (getDistance(userLocation.lat, userLocation.lng, a.lat, a.lng) - getDistance(userLocation.lat, userLocation.lng, b.lat, b.lng)) : 0);
             }
 
-            listEl.innerHTML = filtered.map(item => `
-                <div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full group" onclick="openModal(${item.id})">
+            listEl.innerHTML = filtered.map(f => `
+                <div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col h-full group" onclick="openModal(${f.id})">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition-colors leading-tight">${item.name}</h3>
-                        ${item.province ? `<span class="text-[10px] bg-green-50 px-2 py-1 rounded-lg text-green-600 font-bold whitespace-nowrap">${item.province}</span>` : ''}
+                        <h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600">${currentLang === 'th' ? f.name_th : f.name_en}</h3>
+                        ${f.province_th ? `<span class="text-[10px] bg-green-50 px-2 py-1 rounded-lg text-green-600 font-bold">${currentLang === 'th' ? f.province_th : f.province_en}</span>` : ''}
                     </div>
-                    <p class="text-gray-500 text-sm mb-5 line-clamp-2 flex-grow leading-relaxed">${item.description[0]}</p>
-                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
-                        ${userLocation && item.lat ? `
-                            <span class="text-xs text-green-600 font-bold">📍 ${getDistance(userLocation.lat, userLocation.lng, item.lat, item.lng).toFixed(1)} กม.</span>
-                        ` : `<span class="text-xs text-gray-300">📍 ไม่ระบุพิกัด</span>`}
-                        <span class="text-green-600 font-bold text-sm">ช่วยเหลือ →</span>
-                    </div>
+                    <p class="text-gray-500 text-sm mb-5 line-clamp-2 leading-relaxed">${currentLang === 'th' ? f.desc_th[0] : f.desc_en[0]}</p>
+                    <button class="mt-auto w-full py-3 bg-gray-50 text-gray-900 rounded-xl text-sm font-bold border border-gray-100">${uiText[currentLang].helpBtn}</button>
                 </div>
             `).join('');
         }
 
         function openModal(id) {
-            const item = foundations.find(f => f.id === id);
+            const f = foundations.find(item => item.id === id);
+            const t = uiText[currentLang];
             const body = document.getElementById('modalBody');
+            
             body.innerHTML = `
-                <div class="text-center mb-10 pr-6"> <!-- เว้นที่ให้ปุ่ม X -->
-                    <h2 class="text-3xl font-bold mb-2">${item.name}</h2>
-                    <span class="text-green-600 font-bold bg-green-50 px-4 py-1 rounded-full text-sm">${item.province || 'ศูนย์พักพิงสัตว์'}</span>
+                <div class="text-center mb-10 pr-6">
+                    <h2 class="text-3xl font-bold mb-2">${currentLang === 'th' ? f.name_th : f.name_en}</h2>
+                    <span class="text-green-600 font-bold bg-green-50 px-4 py-1 rounded-full text-sm">${(currentLang === 'th' ? f.province_th : f.province_en) || 'Thailand'}</span>
                 </div>
                 
-                <div class="space-y-8">
+                <div class="space-y-6">
                     <div class="bg-green-50/50 p-6 rounded-3xl">
-                        <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2">
-                            <span class="text-xl">🎁</span> ต้องการรับบริจาค:
-                        </h4>
+                        <h4 class="font-bold text-green-800 mb-4">${t.needDonation}</h4>
                         <ul class="space-y-3">
-                            ${item.accepts.map(tag => `
-                                <li class="flex items-center gap-3 text-gray-700 font-medium">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                                    ${tag}
-                                </li>
-                            `).join('')}
+                            ${(currentLang === 'th' ? f.accepts_th : f.accepts_en).map(tag => `<li class="flex items-center gap-3 text-gray-700 font-medium"><span class="w-2 h-2 rounded-full bg-green-500"></span>${tag}</li>`).join('')}
                         </ul>
                     </div>
-
-                    <div>
-                        <h4 class="font-bold text-gray-800 mb-3 text-lg">รายละเอียด:</h4>
-                        <div class="space-y-2 text-gray-600 text-sm leading-relaxed">
-                            ${item.description.map(d => `<p>• ${d}</p>`).join('')}
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-6 border-t border-gray-100">
-                        ${item.phone ? `<a href="tel:${item.phone}" class="flex items-center justify-center gap-3 p-4 border border-green-600 text-green-600 rounded-2xl font-bold hover:bg-green-50">📞 โทรสอบถาม: ${item.phone}</a>` : ''}
-                        ${item.email ? `<button onclick="copyEmail('${item.email}')" class="flex items-center justify-center gap-3 p-4 border border-gray-200 rounded-2xl font-bold text-gray-600 hover:bg-gray-50">📧 คัดลอกอีเมลบริจาค</button>` : ''}
-                        ${item.facebook ? `<a href="${item.facebook.startsWith('http') ? item.facebook : 'https://www.facebook.com/search/top?q=' + encodeURIComponent(item.facebook)}" target="_blank" class="flex items-center justify-center gap-3 p-4 bg-blue-600 text-white rounded-2xl font-bold">Facebook Page</a>` : ''}
-                        ${item.website ? `<a href="${item.website}" target="_blank" class="flex items-center justify-center gap-3 p-4 bg-gray-800 text-white rounded-2xl font-bold">🌐 เว็บไซต์หลัก</a>` : ''}
-                        ${item.donationUrl ? `<a href="${item.donationUrl}" target="_blank" class="col-span-full flex items-center justify-center gap-3 p-5 bg-green-600 text-white rounded-2xl font-bold shadow-lg hover:bg-green-700 transition-all text-xl mt-4">💝 บริจาคผ่านช่องทางออนไลน์</a>` : ''}
+                    <div class="space-y-3">
+                        ${f.phone ? `<a href="tel:${f.phone}" class="flex items-center justify-center p-4 bg-gray-100 text-gray-900 rounded-2xl font-bold border border-gray-200">${t.call}${f.phone}</a>` : ''}
+                        ${f.email ? `<button onclick="navigator.clipboard.writeText('${f.email}'); alert('Copied!');" class="w-full flex items-center justify-center p-4 bg-gray-100 text-gray-900 rounded-2xl font-bold border border-gray-200">${t.copyEmail}</button>` : ''}
+                        ${f.facebook ? `<a href="${f.facebook.startsWith('http')?f.facebook:'#'}" target="_blank" class="flex items-center justify-center p-4 bg-gray-100 text-gray-900 rounded-2xl font-bold border border-gray-200">Facebook</a>` : ''}
+                        ${f.website ? `<a href="${f.website}" target="_blank" class="flex items-center justify-center p-4 bg-gray-100 text-gray-900 rounded-2xl font-bold border border-gray-200">Website</a>` : ''}
+                        ${f.donationUrl ? `<a href="${f.donationUrl}" target="_blank" class="flex items-center justify-center p-5 bg-green-600 text-white rounded-2xl font-bold shadow-lg text-lg mt-4">${t.donateOnline}</a>` : ''}
                     </div>
                 </div>
             `;
             document.getElementById('detailModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // กันเลื่อนพื้นหลัง
+            document.body.style.overflow = 'hidden';
             setTimeout(() => document.getElementById('modalContentContainer').classList.remove('translate-y-full'), 10);
-        }
-
-        // --- ระบบหาตำแหน่งที่ตั้ง (ปรับปรุงสำหรับ iOS) ---
-        function getLocation() {
-            const btn = document.getElementById('geoBtn');
-            const text = document.getElementById('geoBtnText');
-            
-            if (navigator.geolocation) {
-                text.innerText = "กำลังเข้าถึงพิกัด...";
-                
-                const options = {
-                    enableHighAccuracy: true,
-                    timeout: 8000,
-                    maximumAge: 0
-                };
-
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                        text.innerText = "เรียงลำดับจากใกล้คุณที่สุด";
-                        btn.classList.add('geo-active');
-                        renderList();
-                    },
-                    (err) => {
-                        // คำแนะนำเปิด Permission สำหรับ iOS/Safari
-                        if(err.code === 1) { // PERMISSION_DENIED
-                            alert("❌ คุณยังไม่ได้อนุญาตให้เข้าถึงตำแหน่ง\n\nวิธีเปิดบน iOS:\n1. ไปที่ Settings (การตั้งค่า) > Safari\n2. เลื่อนลงไปที่ Location (ตำแหน่งที่ตั้ง)\n3. เลือก 'Allow' (อนุญาต)");
-                        } else {
-                            alert("ไม่สามารถเข้าถึงตำแหน่งได้: " + err.message);
-                        }
-                        text.innerText = "ใช้ตำแหน่งของฉัน (หาที่ใกล้ตัว)";
-                    },
-                    options
-                );
-            }
-        }
-
-        function setFilter(category) {
-            currentFilter = category;
-            document.querySelectorAll('.filter-chip').forEach(el => {
-                const elCat = el.getAttribute('data-category');
-                if(elCat === category) {
-                    el.classList.add('bg-green-600', 'text-white', 'border-green-600');
-                    el.classList.remove('border-gray-200', 'text-gray-600');
-                } else {
-                    el.classList.remove('bg-green-600', 'text-white', 'border-green-600');
-                    el.classList.add('border-gray-200', 'text-gray-600');
-                }
-            });
-            renderList();
-        }
-
-        function getDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2-lat1) * Math.PI/180;
-            const dLon = (lon2-lon1) * Math.PI/180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
         function closeModal() {
@@ -301,13 +343,31 @@
             setTimeout(() => document.getElementById('detailModal').classList.add('hidden'), 300);
         }
 
-        function copyEmail(email) {
-            navigator.clipboard.writeText(email);
-            alert("คัดลอกอีเมลเรียบร้อย: " + email);
+        function getLocation() {
+            if (navigator.geolocation) {
+                document.getElementById('geoBtnText').innerText = "...";
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                    document.getElementById('geoBtnText').innerText = uiText[currentLang].geoBtnActive;
+                    document.getElementById('geoBtn').classList.add('geo-active');
+                    renderList();
+                }, () => { alert("Location error"); });
+            }
         }
 
-        document.getElementById('searchInput').addEventListener('input', renderList);
-        renderList();
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2-lat1) * Math.PI/180;
+            const dLon = (lon2-lon1) * Math.PI/180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        }
+
+        window.addEventListener('click', (e) => { 
+            if (!e.target.closest('#topSearchInput') && !e.target.closest('#topSearchInputMobile')) hideTrays(); 
+        });
+
+        changeLang('th');
     </script>
 </body>
 </html>
